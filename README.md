@@ -1,5 +1,6 @@
 <img src="https://github-readme-stats.vercel.app/api/top-langs?username=R1yAA&show_icons=true&locale=en&layout=compact&theme=chartreuse-dark" alt="ovi" />
 
+https://activity-graph.herokuapp.com/graph?username=R1yAA&theme=react-dark&hide_border=true&area=true
 <!--
 **R1yAA/R1yAA** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
