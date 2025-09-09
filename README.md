@@ -1,16 +1,58 @@
-<img src="https://github-readme-stats.vercel.app/api/top-langs?username=R1yAA&show_icons=true&locale=en&layout=compact&theme=chartreuse-dark" alt="ovi" />
+<img>
+import React, { useEffect, useState } from "react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
-![Contribution](https://activity-graph.herokuapp.com/graph?username=R1yAA&theme=react-dark&hide_border=true&area=true)<!--
-**R1yAA/R1yAA** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-Here are some ideas to get you started:
+export default function GithubActivityGraph({ username }) {
+  const [data, setData] = useState(null);
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+  useEffect(() => {
+    async function fetchData() {
+      const res = await fetch(`https://api.github.com/users/${R1yAA}/events/public`);
+      const events = await res.json();
+
+      // Count commits, PRs, issues by day
+      const stats = {};
+      events.forEach((e) => {
+        const day = e.created_at.slice(0, 10);
+        stats[day] = stats[day] || { commits: 0, prs: 0, issues: 0 };
+
+        if (e.type === "PushEvent") stats[day].commits += e.payload.commits.length;
+        if (e.type === "PullRequestEvent") stats[day].prs += 1;
+        if (e.type === "IssuesEvent") stats[day].issues += 1;
+      });
+
+      const labels = Object.keys(stats).sort();
+      setData({
+        labels,
+        datasets: [
+          { label: "Commits", data: labels.map((d) => stats[d].commits), borderColor: "blue" },
+          { label: "PRs", data: labels.map((d) => stats[d].prs), borderColor: "green" },
+          { label: "Issues", data: labels.map((d) => stats[d].issues), borderColor: "red" },
+        ],
+      });
+    }
+    fetchData();
+  }, [username]);
+
+  if (!data) return <p>Loading...</p>;
+
+  return (
+    <div className="p-4 bg-gray-900 rounded-xl shadow-lg">
+      <Line data={data} options={{ responsive: true, plugins: { legend: { position: "top" } } }} />
+    </div>
+  );
+}
+
+</img>
